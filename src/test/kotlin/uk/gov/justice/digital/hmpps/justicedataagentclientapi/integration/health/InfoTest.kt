@@ -1,9 +1,9 @@
-package uk.gov.justice.digital.hmpps.templatepackagename.integration.health
+package uk.gov.justice.digital.hmpps.justicedataagentclientapi.integration.health
 
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.info.BuildProperties
-import uk.gov.justice.digital.hmpps.templatepackagename.integration.IntegrationTestBase
+import uk.gov.justice.digital.hmpps.justicedataagentclientapi.integration.IntegrationTestBase
 
 class InfoTest(
   @Autowired private val buildProperties: BuildProperties,
@@ -16,7 +16,7 @@ class InfoTest(
       .expectStatus()
       .isOk
       .expectBody()
-      .jsonPath("build.name").isEqualTo("hmpps-template-kotlin")
+      .jsonPath("build.name").isEqualTo("hmpps-justice-data-agent-client-api")
   }
 
   @Test
