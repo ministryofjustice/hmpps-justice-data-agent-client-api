@@ -13,9 +13,7 @@ class PromptServiceImpl(private val jdaWorkerClient: JdaWorkerClient) : PromptSe
   override suspend fun updatePrompt(
     key: String,
     promptRequest: PromptRequest,
-  ): PromptResponse {
-    return jdaWorkerClient.updatePrompt(key, promptRequest)
-  }
+  ): PromptResponse = jdaWorkerClient.updatePrompt(key, promptRequest)
 
   override suspend fun getPrompts(): List<PromptsResponse> = jdaWorkerClient.getPrompts()
 
