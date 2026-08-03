@@ -11,9 +11,7 @@ class JdaWorkerServiceImpl(private val jdaWorkerClient: JdaWorkerClient) : JdaWo
   companion object {
     val logger = LoggerFactory.getLogger(this::class.java)
   }
-  override suspend fun submitSynchronousRequest(jdaRequest: JdaRequest): JdaResponse {
-    return jdaWorkerClient.submitSynchronousRequest(jdaRequest)
-  }
+  override suspend fun submitSynchronousRequest(jdaRequest: JdaRequest): JdaResponse = jdaWorkerClient.submitSynchronousRequest(jdaRequest)
 
   override suspend fun submitNonBlockingRequest(jdaRequest: JdaRequest): JdaResponse {
     TODO("Not yet implemented")

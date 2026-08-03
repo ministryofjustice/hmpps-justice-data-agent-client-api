@@ -29,5 +29,4 @@ class WebClientConfiguration(
 
   // @Bean
   // fun hmppsJdaWorkerWebClient(builder: WebClient.Builder): WebClient = builder.baseUrl(jdaWorkerBaseUrl).build()
-
 }

@@ -5,7 +5,7 @@ hmpps:
   jda:
     worker:
       api:
-        base-url: http://localhost:8080
+        base-url: https://justice-data-agent-worker-dev.hmpps.service.justice.gov.uk
   api:
     timeout: 10s
 

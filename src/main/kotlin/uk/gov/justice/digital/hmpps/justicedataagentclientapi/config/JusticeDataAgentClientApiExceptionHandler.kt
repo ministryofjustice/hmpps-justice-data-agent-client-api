@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.servlet.resource.NoResourceFoundException
 import uk.gov.justice.digital.hmpps.justicedataagentclientapi.exception.JdaWorkerException
-import uk.gov.justice.digital.hmpps.justicedataagentworker.exception.NotFoundException
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
 @RestControllerAdvice
@@ -54,7 +53,7 @@ class JusticeDataAgentClientApiExceptionHandler {
   fun handleException(e: JdaWorkerException): ResponseEntity<ErrorResponse> = ResponseEntity
     .status(e.status)
     .body(
-      e.response
+      e.response,
     ).also { log.error("Unexpected exception", e) }
 
   @ExceptionHandler(Exception::class)

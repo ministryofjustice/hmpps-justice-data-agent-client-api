@@ -29,11 +29,11 @@ class JdaWorkerClient(private val hmppsJdaWorkerWebClient: WebClient) {
       .bodyValue(jdaRequest)
       .retrieve()
       .bodyToMono(JdaResponse::class.java)
-      .onErrorResume { e->
+      .onErrorResume { e ->
         e as WebClientResponseException
         val error = e.getResponseBodyAs(ErrorResponse::class.java)
         logger.error("Error connecting to jdaworking: ${e.message}")
-        Mono.error {throw JdaWorkerException(e.message, HttpStatus.valueOf(e.statusCode.value()), error!!)}
+        Mono.error { throw JdaWorkerException(e.message, HttpStatus.valueOf(e.statusCode.value()), error!!) }
       }
       .blockOptional().orElseThrow { NotFoundException("Error connecting to jdaworking") }
     return response
@@ -45,11 +45,11 @@ class JdaWorkerClient(private val hmppsJdaWorkerWebClient: WebClient) {
       .bodyValue(promptRequest)
       .retrieve()
       .bodyToMono(PromptResponse::class.java)
-      .onErrorResume { e->
+      .onErrorResume { e ->
         e as WebClientResponseException
         val error = e.getResponseBodyAs(ErrorResponse::class.java)
         logger.error("Error connecting to jdaworking: ${e.message}")
-        Mono.error {throw JdaWorkerException(e.message, HttpStatus.valueOf(e.statusCode.value()), error!!)}
+        Mono.error { throw JdaWorkerException(e.message, HttpStatus.valueOf(e.statusCode.value()), error!!) }
       }
       .blockOptional().orElseThrow()
     return response
@@ -60,11 +60,11 @@ class JdaWorkerClient(private val hmppsJdaWorkerWebClient: WebClient) {
       .uri("/v1/prompts")
       .retrieve()
       .bodyToMono(object : ParameterizedTypeReference<List<PromptsResponse>>() {})
-      .onErrorResume { e->
+      .onErrorResume { e ->
         e as WebClientResponseException
         val error = e.getResponseBodyAs(ErrorResponse::class.java)
         logger.error("Error connecting to jdaworking: ${e.message}")
-        Mono.error {throw JdaWorkerException(e.message, HttpStatus.valueOf(e.statusCode.value()), error!!)}
+        Mono.error { throw JdaWorkerException(e.message, HttpStatus.valueOf(e.statusCode.value()), error!!) }
       }
       .blockOptional().orElseThrow()
     return response
@@ -75,11 +75,11 @@ class JdaWorkerClient(private val hmppsJdaWorkerWebClient: WebClient) {
       .uri("/v1/prompts/$key")
       .retrieve()
       .bodyToMono(PromptResponse::class.java)
-      .onErrorResume { e->
+      .onErrorResume { e ->
         e as WebClientResponseException
         val error = e.getResponseBodyAs(ErrorResponse::class.java)
         logger.error("Error connecting to jdaworking: ${e.message}")
-        Mono.error {throw JdaWorkerException(e.message, HttpStatus.valueOf(e.statusCode.value()), error!!)}
+        Mono.error { throw JdaWorkerException(e.message, HttpStatus.valueOf(e.statusCode.value()), error!!) }
       }
       .blockOptional().orElseThrow()
     return response
@@ -90,26 +90,25 @@ class JdaWorkerClient(private val hmppsJdaWorkerWebClient: WebClient) {
       .uri("/v1/prompts/$key")
       .retrieve()
       .bodyToMono(PromptResponse::class.java)
-      .onErrorResume { e->
+      .onErrorResume { e ->
         e as WebClientResponseException
         val error = e.getResponseBodyAs(ErrorResponse::class.java)
         logger.error("Error connecting to jdaworking: ${e.message}")
-        Mono.error {throw JdaWorkerException(e.message, HttpStatus.valueOf(e.statusCode.value()), error!!)}
+        Mono.error { throw JdaWorkerException(e.message, HttpStatus.valueOf(e.statusCode.value()), error!!) }
       }
       .blockOptional().orElseThrow()
   }
-
 
   suspend fun getPromptByKeyAndVersion(key: String, version: Int?): PromptResponse {
     val response = hmppsJdaWorkerWebClient.get()
       .uri("/v1/prompts/$key/versions/$version")
       .retrieve()
       .bodyToMono(PromptResponse::class.java)
-      .onErrorResume { e->
+      .onErrorResume { e ->
         e as WebClientResponseException
         val error = e.getResponseBodyAs(ErrorResponse::class.java)
         logger.error("Error connecting to jdaworking: ${e?.message}")
-        Mono.error { throw JdaWorkerException(e.message!!, HttpStatus.valueOf(e.statusCode.value()), error!!)}
+        Mono.error { throw JdaWorkerException(e.message!!, HttpStatus.valueOf(e.statusCode.value()), error!!) }
       }
       .blockOptional().orElseThrow()
     return response

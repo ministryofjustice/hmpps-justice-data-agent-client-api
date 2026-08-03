@@ -3,7 +3,6 @@ package uk.gov.justice.digital.hmpps.justicedataagentclientapi.service.integrati
 import uk.gov.justice.digital.hmpps.justicedataagentclientapi.service.integration.dto.request.PromptRequest
 import uk.gov.justice.digital.hmpps.justicedataagentclientapi.service.integration.dto.response.PromptsResponse
 import uk.gov.justice.digital.hmpps.justicedataagentworker.dto.response.PromptResponse
-import java.util.UUID
 
 interface PromptService {
   suspend fun savePrompt(promptRequest: PromptRequest): PromptResponse
@@ -17,5 +16,4 @@ interface PromptService {
   suspend fun getPromptByKey(key: String): PromptResponse // return prompt with latest version
 
   suspend fun deletePromptByKey(key: String)
-
 }

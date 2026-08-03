@@ -15,7 +15,6 @@ import uk.gov.justice.digital.hmpps.justicedataagentclientapi.service.integratio
 import uk.gov.justice.digital.hmpps.justicedataagentclientapi.service.integration.dto.response.PromptsResponse
 import uk.gov.justice.digital.hmpps.justicedataagentworker.dto.response.PromptResponse
 
-
 @RestController
 @RequestMapping(value = ["/v1"])
 class PromptResource(
