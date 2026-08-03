@@ -25,7 +25,7 @@ class JdaWorkerClient(private val hmppsJdaWorkerWebClient: WebClient) {
 
   suspend fun submitSynchronousRequest(jdaRequest: JdaRequest): JdaResponse {
     val response = hmppsJdaWorkerWebClient.post()
-      .uri("/v1/chat/jda/worker")
+      .uri("/v1/sendrequest")
       .bodyValue(jdaRequest)
       .retrieve()
       .bodyToMono(JdaResponse::class.java)
