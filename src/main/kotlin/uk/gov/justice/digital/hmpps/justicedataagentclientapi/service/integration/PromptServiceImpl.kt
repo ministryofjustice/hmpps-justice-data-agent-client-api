@@ -14,7 +14,7 @@ class PromptServiceImpl(private val jdaWorkerClient: JdaWorkerClient) : PromptSe
     key: String,
     promptRequest: PromptRequest,
   ): PromptResponse {
-    TODO("Not yet implemented")
+    return jdaWorkerClient.updatePrompt(key, promptRequest)
   }
 
   override suspend fun getPrompts(): List<PromptsResponse> = jdaWorkerClient.getPrompts()

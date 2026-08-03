@@ -55,6 +55,22 @@ class JdaWorkerClient(private val hmppsJdaWorkerWebClient: WebClient) {
     return response
   }
 
+  suspend fun updatePrompt(key: String, promptRequest: PromptRequest): PromptResponse {
+    val response = hmppsJdaWorkerWebClient.put()
+      .uri("/v1/prompts/$key")
+      .bodyValue(promptRequest)
+      .retrieve()
+      .bodyToMono(PromptResponse::class.java)
+      .onErrorResume { e ->
+        e as WebClientResponseException
+        val error = e.getResponseBodyAs(ErrorResponse::class.java)
+        logger.error("Error connecting to jdaworking: ${e.message}")
+        Mono.error { throw JdaWorkerException(e.message, HttpStatus.valueOf(e.statusCode.value()), error!!) }
+      }
+      .blockOptional().orElseThrow()
+    return response
+  }
+
   suspend fun getPrompts(): List<PromptsResponse> {
     val response = hmppsJdaWorkerWebClient.get()
       .uri("/v1/prompts")
