@@ -13,12 +13,12 @@ import uk.gov.justice.digital.hmpps.justicedataagentworker.dto.response.JdaRespo
 
 @RestController
 @RequestMapping(value = ["v1"])
-class JdaWorkerResource(private val jodaWorkerService: JdaWorkerService) {
+class JdaWorkerResource(private val jdaWorkerService: JdaWorkerService) {
 
   @PostMapping("submitrequest")
   @PreAuthorize("hasAnyRole('JUSTICE_DATA_AGENT_REQUESTS')")
   suspend fun submitSynchronousRequest(@RequestBody jdaRequest: JdaRequest): ResponseEntity<JdaResponse> {
-    val response = jodaWorkerService.submitSynchronousRequest(jdaRequest)
+    val response = jdaWorkerService.submitSynchronousRequest(jdaRequest)
     return ResponseEntity(response, HttpStatus.OK)
   }
 }
