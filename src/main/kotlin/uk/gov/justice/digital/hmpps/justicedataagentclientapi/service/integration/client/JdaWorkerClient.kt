@@ -8,9 +8,9 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
 import reactor.core.publisher.Mono
 import uk.gov.justice.digital.hmpps.justicedataagentclientapi.exception.JdaWorkerException
+import uk.gov.justice.digital.hmpps.justicedataagentclientapi.service.integration.dto.request.JdaRequest
 import uk.gov.justice.digital.hmpps.justicedataagentclientapi.service.integration.dto.request.PromptRequest
 import uk.gov.justice.digital.hmpps.justicedataagentclientapi.service.integration.dto.response.PromptsResponse
-import uk.gov.justice.digital.hmpps.justicedataagentworker.dto.response.JdaRequest
 import uk.gov.justice.digital.hmpps.justicedataagentworker.dto.response.JdaResponse
 import uk.gov.justice.digital.hmpps.justicedataagentworker.dto.response.PromptResponse
 import uk.gov.justice.digital.hmpps.justicedataagentworker.exception.NotFoundException
