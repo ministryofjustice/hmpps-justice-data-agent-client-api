@@ -25,7 +25,12 @@ class WebClientConfiguration(
   fun hmppsJdaWorkerHealthWebClient(builder: WebClient.Builder): WebClient = builder.healthWebClient(jdaWorkerBaseUrl, healthTimeout)
 
   @Bean
-  fun hmppsJdaWorkerWebClient(authorizedClientManager: OAuth2AuthorizedClientManager, builder: WebClient.Builder): WebClient = builder.authorisedWebClient(authorizedClientManager, registrationId = "jda-worker-api", url = jdaWorkerBaseUrl, apiTimeout)
+  fun hmppsJdaWorkerWebClient(authorizedClientManager: OAuth2AuthorizedClientManager, builder: WebClient.Builder): WebClient = builder.authorisedWebClient(
+    authorizedClientManager,
+    registrationId = "jda-worker-api",
+    url = jdaWorkerBaseUrl,
+    Duration.ofSeconds(18000L),
+  )
 
   // @Bean
   // fun hmppsJdaWorkerWebClient(builder: WebClient.Builder): WebClient = builder.baseUrl(jdaWorkerBaseUrl).build()

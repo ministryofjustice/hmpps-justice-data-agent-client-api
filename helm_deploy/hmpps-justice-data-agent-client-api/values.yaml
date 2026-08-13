@@ -16,7 +16,7 @@ generic-service:
 
   # Environment variables to load into the deployment
   env:
-    SERVER_PORT: "8080"
+    SERVER_PORT: "8081"
     APPLICATIONINSIGHTS_CONFIGURATION_FILE: applicationinsights.json
     # JAVA_TOOL_OPTIONS is set in the base image (hmpps-eclipse-temurin) with:
     #   -XX:MaxRAMPercentage=50.0

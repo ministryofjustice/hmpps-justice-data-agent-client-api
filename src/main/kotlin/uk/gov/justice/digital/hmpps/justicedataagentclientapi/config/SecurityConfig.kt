@@ -9,7 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @Configuration
 class SecurityConfig {
   @Bean // skipping auth check on this point for developer testing, this wil be removed once credential added in env and required role
-  fun webSecurityCustomizer(): WebSecurityCustomizer? = WebSecurityCustomizer { web: WebSecurity -> web.ignoring().requestMatchers("/v1/**") }
+  fun webSecurityCustomizer(): WebSecurityCustomizer? = WebSecurityCustomizer { web: WebSecurity -> web.ignoring().requestMatchers("/v2/**") }
 
   @Bean
   fun asyncTimeoutCustomize(): TomcatConnectorCustomizer = TomcatConnectorCustomizer { connector -> connector.asyncTimeout = 180000 }

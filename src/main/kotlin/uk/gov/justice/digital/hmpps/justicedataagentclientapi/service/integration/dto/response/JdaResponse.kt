@@ -9,5 +9,5 @@ data class JdaResponse(
   val correlationId: UUID,
   val prompt: Prompt,
   val responseData: Any,
-  val metadata: MetaData,
+  val metaData: MetaData,
 )

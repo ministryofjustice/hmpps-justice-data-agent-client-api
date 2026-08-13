@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
@@ -28,6 +29,9 @@ import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 class PromptResource(
   private val promptService: PromptService,
 ) {
+  companion object {
+    val logger = LoggerFactory.getLogger(this::class.java)
+  }
 
   @Tag(name = "prompts")
   @Operation(
@@ -52,6 +56,7 @@ class PromptResource(
   @PreAuthorize("hasAnyRole('JUSTICE_DATA_AGENT_PROMPTS')")
   suspend fun createPrompt(@RequestBody promptRequest: PromptRequest): ResponseEntity<PromptResponse> {
     val prompt = promptService.savePrompt(promptRequest)
+    logger.info("New Prompt created for prompt key: ${promptRequest.promptKey}")
     return ResponseEntity.status(HttpStatus.CREATED).body(prompt)
   }
 
@@ -81,6 +86,7 @@ class PromptResource(
     @RequestBody promptRequest: PromptRequest,
   ): ResponseEntity<PromptResponse> {
     val prompt = promptService.updatePrompt(key, promptRequest)
+    logger.info("Prompt updated for prompt key: $key")
     return ResponseEntity.status(HttpStatus.OK).body(prompt)
   }
 
@@ -107,6 +113,7 @@ class PromptResource(
   @PreAuthorize("hasAnyRole('JUSTICE_DATA_AGENT_PROMPTS')")
   suspend fun getPrompts(): ResponseEntity<List<PromptsResponse>> {
     val prompt = promptService.getPrompts()
+    logger.info("Returning all prompts with versions")
     return ResponseEntity.status(HttpStatus.OK).body(prompt)
   }
 
@@ -133,6 +140,7 @@ class PromptResource(
   @PreAuthorize("hasAnyRole('JUSTICE_DATA_AGENT_PROMPTS')")
   suspend fun getPromptByKey(@PathVariable key: String): ResponseEntity<PromptResponse> {
     val prompt = promptService.getPromptByKey(key)
+    logger.info("Returning prompt for a given key: $key ")
     return ResponseEntity.status(HttpStatus.OK).body(prompt)
   }
 
@@ -159,6 +167,7 @@ class PromptResource(
   @PreAuthorize("hasAnyRole('JUSTICE_DATA_AGENT_PROMPTS')")
   suspend fun getPromptByKeyAndVersion(@PathVariable key: String, @PathVariable version: Int): ResponseEntity<PromptResponse> {
     val prompt = promptService.getPromptsByKeyAndVersion(key, version)
+    logger.info("Returning prompt for a given key: $key and version: $version")
     return ResponseEntity.status(HttpStatus.OK).body(prompt)
   }
 
@@ -181,10 +190,11 @@ class PromptResource(
       ),
     ],
   )
-  @DeleteMapping("/prompts/{key}/versions/{version}")
+  @DeleteMapping("/prompts/{key}")
   @PreAuthorize("hasAnyRole('JUSTICE_DATA_AGENT_PROMPTS')")
   suspend fun deletePromptByKey(@PathVariable key: String): ResponseEntity<Void> {
     promptService.deletePromptByKey(key)
+    logger.info("Prompt with key: $key has been deleted")
     return ResponseEntity.status(HttpStatus.OK).build()
   }
 }

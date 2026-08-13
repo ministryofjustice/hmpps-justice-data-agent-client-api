@@ -24,8 +24,9 @@ class JdaWorkerClient(private val hmppsJdaWorkerWebClient: WebClient) {
   }
 
   suspend fun submitSynchronousRequest(jdaRequest: JdaRequest): JdaResponse {
+    logger.info("Sending synchronous request to jda worker for correlation id: ${jdaRequest.correlationId}")
     val response = hmppsJdaWorkerWebClient.post()
-      .uri("/v1/sendrequest")
+      .uri("/v1/submitrequest")
       .bodyValue(jdaRequest)
       .retrieve()
       .bodyToMono(JdaResponse::class.java)
@@ -40,6 +41,7 @@ class JdaWorkerClient(private val hmppsJdaWorkerWebClient: WebClient) {
   }
 
   suspend fun createPrompt(promptRequest: PromptRequest): PromptResponse {
+    logger.info("Sending request to Jda Worker for adding new prompt for client: ${promptRequest.createdBy}")
     val response = hmppsJdaWorkerWebClient.post()
       .uri("/v1/prompts")
       .bodyValue(promptRequest)
@@ -56,6 +58,7 @@ class JdaWorkerClient(private val hmppsJdaWorkerWebClient: WebClient) {
   }
 
   suspend fun updatePrompt(key: String, promptRequest: PromptRequest): PromptResponse {
+    logger.info("Sending request to Jda Worker for updating prompt for key: ${promptRequest.promptKey}")
     val response = hmppsJdaWorkerWebClient.put()
       .uri("/v1/prompts/$key")
       .bodyValue(promptRequest)
@@ -72,6 +75,7 @@ class JdaWorkerClient(private val hmppsJdaWorkerWebClient: WebClient) {
   }
 
   suspend fun getPrompts(): List<PromptsResponse> {
+    logger.info("Sending request to Jda worker to retrieve  all prompt.")
     val response = hmppsJdaWorkerWebClient.get()
       .uri("/v1/prompts")
       .retrieve()
@@ -87,6 +91,7 @@ class JdaWorkerClient(private val hmppsJdaWorkerWebClient: WebClient) {
   }
 
   suspend fun getPromptByKey(key: String): PromptResponse {
+    logger.info("Sending request to Jda worker to retrieve  prompt by key: $key")
     val response = hmppsJdaWorkerWebClient.get()
       .uri("/v1/prompts/$key")
       .retrieve()
@@ -102,10 +107,11 @@ class JdaWorkerClient(private val hmppsJdaWorkerWebClient: WebClient) {
   }
 
   suspend fun deletePromptByKey(key: String) {
-    hmppsJdaWorkerWebClient.get()
+    logger.info("Sending request to Jda worker to delete prompt by key: $key.")
+    hmppsJdaWorkerWebClient.delete()
       .uri("/v1/prompts/$key")
       .retrieve()
-      .bodyToMono(PromptResponse::class.java)
+      .bodyToMono(Void::class.java)
       .onErrorResume { e ->
         e as WebClientResponseException
         val error = e.getResponseBodyAs(ErrorResponse::class.java)
@@ -116,6 +122,7 @@ class JdaWorkerClient(private val hmppsJdaWorkerWebClient: WebClient) {
   }
 
   suspend fun getPromptByKeyAndVersion(key: String, version: Int?): PromptResponse {
+    logger.info("Sending request to Jda worker to retrieve  prompt by key: $key and version: $version")
     val response = hmppsJdaWorkerWebClient.get()
       .uri("/v1/prompts/$key/versions/$version")
       .retrieve()
