@@ -1,2 +1,11 @@
 hmpps-auth:
   url: "http://localhost:8090/auth"
+
+hmpps:
+  jda:
+    worker:
+      api:
+        base-url: https://justice-data-agent-worker-dev.hmpps.service.justice.gov.uk
+  api:
+    timeout: 10s
+

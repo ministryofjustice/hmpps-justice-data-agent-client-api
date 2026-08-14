@@ -21,6 +21,13 @@ spring:
         provider:
           hmpps-auth:
             token-uri: ${hmpps-auth.url}/oauth/token
+        registration:
+          jda-worker-api:
+            provider: hmpps-auth
+            client-id: ${SYSTEM_CLIENT_ID}
+            client-secret: ${SYSTEM_CLIENT_SECRET}
+            authorization-grant-type: client_credentials
+            scope: read
   http:
     codecs:
       max-in-memory-size: 10MB
@@ -29,7 +36,7 @@ spring:
       include-message: always
 
 server:
-  port: 8080
+  port: 8081
   servlet:
     context-path: /
   forward-headers-strategy: native
