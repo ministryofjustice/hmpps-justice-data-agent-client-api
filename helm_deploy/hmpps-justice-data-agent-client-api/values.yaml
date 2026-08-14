@@ -7,7 +7,7 @@ generic-service:
   image:
     repository: ghcr.io/ministryofjustice/hmpps-justice-data-agent-client-api
     tag: app_version # override at deployment time
-    port: 8080
+    port: 8081
 
   ingress:
     enabled: true
