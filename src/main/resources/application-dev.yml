@@ -3,7 +3,7 @@ hmpps-auth:
 
 hmpps:
   sqs:
-    enabled: false
+    enabled: true
     provider: localstack
     queues:
       jdarequestqueus:

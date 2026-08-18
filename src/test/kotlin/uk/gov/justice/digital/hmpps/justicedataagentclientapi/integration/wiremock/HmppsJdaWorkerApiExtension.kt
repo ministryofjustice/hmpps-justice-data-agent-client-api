@@ -2,7 +2,6 @@ package uk.gov.justice.digital.hmpps.justicedataagentclientapi.integration.wirem
 
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
-import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.post
 import com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo
 import com.github.tomakehurst.wiremock.http.HttpHeader
@@ -11,64 +10,59 @@ import org.junit.jupiter.api.extension.AfterAllCallback
 import org.junit.jupiter.api.extension.BeforeAllCallback
 import org.junit.jupiter.api.extension.BeforeEachCallback
 import org.junit.jupiter.api.extension.ExtensionContext
-import java.time.LocalDateTime
-import java.time.ZoneOffset
+import uk.gov.justice.digital.hmpps.justicedataagentclientapi.utility.DataGenerator
 
-class HmppsAuthApiExtension :
+class HmppsJdaWorkerApiExtension :
   BeforeAllCallback,
   AfterAllCallback,
   BeforeEachCallback {
   companion object {
     @JvmField
-    val hmppsAuth = HmppsAuthMockServer()
+    val jdaWorkerService = HmppsJdaWorkerMockServer()
   }
 
   override fun beforeAll(context: ExtensionContext) {
-    hmppsAuth.start()
-    hmppsAuth.stubGrantToken()
+    jdaWorkerService.start()
+    jdaWorkerService.stubSubmitRequest()
   }
 
   override fun beforeEach(context: ExtensionContext) {
-    hmppsAuth.resetRequests()
+    jdaWorkerService.resetRequests()
   }
 
   override fun afterAll(context: ExtensionContext) {
-    hmppsAuth.stop()
+    jdaWorkerService.stop()
   }
 }
 
-class HmppsAuthMockServer : WireMockServer(WIREMOCK_PORT) {
+class HmppsJdaWorkerMockServer : WireMockServer(WIREMOCK_PORT) {
   companion object {
-    private const val WIREMOCK_PORT = 8090
+    private const val WIREMOCK_PORT = 8091
   }
 
-  fun stubGrantToken() {
+  fun stubSubmitRequest() {
     stubFor(
-      post(urlEqualTo("/auth/oauth/token"))
+      post(urlEqualTo("/v1/submitrequest"))
         .willReturn(
           aResponse()
             .withHeaders(HttpHeaders(HttpHeader("Content-Type", "application/json")))
             .withBody(
-              """
-                {
-                  "token_type": "bearer",
-                  "access_token": "ABCDE",
-                  "expires_in": ${LocalDateTime.now().plusHours(2).toEpochSecond(ZoneOffset.UTC)}
-                }
-              """.trimIndent(),
+              DataGenerator.buildJdaResponse()
             ),
         ),
     )
   }
 
-  fun stubHealthPing(status: Int) {
+  fun stubQueueRequest() {
     stubFor(
-      get("/auth/health/ping").willReturn(
-        aResponse()
-          .withHeader("Content-Type", "application/json")
-          .withBody(if (status == 200) """{"status":"UP"}""" else """{"status":"DOWN"}""")
-          .withStatus(status),
-      ),
+      post(urlEqualTo("/v1/queuerequest"))
+        .willReturn(
+          aResponse()
+            .withHeaders(HttpHeaders(HttpHeader("Content-Type", "application/json")))
+            .withBody(
+              DataGenerator.buildJdaResponse()
+            ),
+        ),
     )
   }
 }

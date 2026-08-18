@@ -9,7 +9,9 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-webclient")
   implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.3")
   implementation("uk.gov.justice.service.hmpps:hmpps-sqs-spring-boot-starter:7.3.0")
-
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.10.2")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.10.2")
   // Localstack
   implementation("org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE")
   testImplementation("org.testcontainers:localstack:1.21.4")

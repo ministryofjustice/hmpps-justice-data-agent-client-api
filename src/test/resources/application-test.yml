@@ -14,6 +14,25 @@ springdoc:
   swagger-ui:
     enabled: true
 
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${hmpps-auth.url}/.well-known/jwks.json
+
+      client:
+        provider:
+          hmpps-auth:
+            token-uri: ${hmpps-auth.url}/oauth/token
+        registration:
+          jda-worker-api:
+            provider: hmpps-auth
+            client-id: "client-id"
+            client-secret: "client-secret"
+            authorization-grant-type: client_credentials
+            scope: read
+
 hmpps:
   sqs:
     enabled: true
@@ -29,10 +48,10 @@ hmpps:
         queuename: sqs_response_queue_name
         dlqName: sqs_response_dlq_queue_name
         #subscribeTopicId: jdaevents
-        #topics:
+    #topics:
         #jdaevents:
         #arn: arn:aws:sns:XXX-REGION:YYYY:jdaevents-topic
   jda:
     worker:
       api:
-        base-url: http://localhost:8082
+        base-url: http://localhost:8091
