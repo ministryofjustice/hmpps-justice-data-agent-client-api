@@ -23,8 +23,8 @@ import java.util.*
 
 class JdaWorkerResourceTest(
   @Autowired private val objectMapper: ObjectMapper,
-  @param:Value("\${hmpps.sqs.queues.jdarequestqueus.queuename}") val jdaRequestQueueName: String,
-  @param:Value("\${hmpps.sqs.queues.jdaresponsequeus.queuename}") val jdaResponseQueueName: String,
+  @param:Value("\${hmpps.sqs.queues.jdarequestqueues.queuename}") val jdaRequestQueueName: String,
+  @param:Value("\${hmpps.sqs.queues.jdaresponsequeues.queuename}") val jdaResponseQueueName: String,
 ) : IntegrationTestBase() {
   @BeforeEach
   internal fun setUp() {
@@ -37,7 +37,7 @@ class JdaWorkerResourceTest(
       SqsTemplate
         .newTemplate(
           hmppsQueueService
-            .findByQueueId("jdaresponsequeus")!!.sqsClient,
+            .findByQueueId("jdaresponsequeues")!!.sqsClient,
         )
     logger.info("Sending jda request message to queue")
     sqsTemplate.send { to -> to.queue("sqs_response_queue_name").payload(ObjectMapper().readTree(DataGenerator.buildJdaResponse())) }
@@ -68,6 +68,25 @@ class JdaWorkerResourceTest(
 
   @Test
   fun `submit queue request and  get dequeue response`() {
+    // Get message from jda request queue.
+    var sqsClient = hmppsQueueService
+      .findByQueueId("jdarequestqueues")!!.sqsClient
+    var queueUrl = sqsClient.getQueueUrl(
+      GetQueueUrlRequest.builder()
+        .queueName(jdaRequestQueueName)
+        .build(),
+    )?.join()?.queueUrl()
+    var messages = sqsClient.receiveMessage(
+      ReceiveMessageRequest.builder()
+        .maxNumberOfMessages(1)
+        .queueUrl(queueUrl)
+        .build(),
+    )?.join()
+    // Verify jd request queue is empty.
+    assertEquals(0, messages?.messages()?.size)
+
+    // send jda request to endpoint /v1/queuerequest
+
     val correlationId = UUID.randomUUID()
     val promptKey = "prompt key 1"
     val version = 1
@@ -82,30 +101,24 @@ class JdaWorkerResourceTest(
       .exchange()
       .expectStatus().isAccepted
 
-    // Get message from queue to verify it get added in queue by call to endpoint /v1/queuerequest
-    var sqsClient = hmppsQueueService
-      .findByQueueId("jdarequestqueus")!!.sqsClient
-    var queueUrl = sqsClient.getQueueUrl(
-      GetQueueUrlRequest.builder()
-        .queueName(jdaRequestQueueName)
-        .build(),
-    )?.join()?.queueUrl()
-    var messages = sqsClient.receiveMessage(
+    // Get message from queue to verify it get added in jda request queue by call to endpoint /v1/queuerequest.
+    messages = sqsClient.receiveMessage(
       ReceiveMessageRequest.builder()
         .maxNumberOfMessages(1)
         .queueUrl(queueUrl)
         .build(),
     )?.join()
+    assertEquals(1, messages?.messages()?.size)
 
+    // Get jda request message body from jda request queue.
     val jdaRequest = objectMapper.readValue(messages?.messages()[0]?.body(), JdaRequest::class.java)
 
-    // assert message in queue
+    // Assert message added in jda request queue after api call to endpoint v1/queuerequest
     assertEquals(correlationId, jdaRequest.correlationId)
     assertEquals(promptKey, jdaRequest.prompt.key)
     assertEquals(version, jdaRequest.prompt.version)
 
-    assertEquals(1, messages?.messages()?.size)
-
+    // Send request to dequeue message for jda response queue.
     webTestClient.get().uri("/v1/dequeueresponse")
       .headers(setAuthorisation(roles = listOf("ROLE_JUSTICE_DATA_AGENT_REQUESTS")))
       .header("Content-Type", "application/json")
@@ -119,16 +132,14 @@ class JdaWorkerResourceTest(
       .returnResult()
       .responseBody as JdaResponse
 
-    // assert no message in queue
-    // assert message in jda response queue
+    // Verify no message in jda response queue after call to endpoint /v1/dequeueresponse.
     sqsClient = hmppsQueueService
-      .findByQueueId("jdaresponsequeus")!!.sqsClient
+      .findByQueueId("jdaresponsequeues")!!.sqsClient
     queueUrl = sqsClient.getQueueUrl(
       GetQueueUrlRequest.builder()
         .queueName(jdaResponseQueueName)
         .build(),
     )?.join()?.queueUrl()
-    // Get message from queue to verify it has been dequeued
     messages = sqsClient.receiveMessage(
       ReceiveMessageRequest.builder()
         .maxNumberOfMessages(1)

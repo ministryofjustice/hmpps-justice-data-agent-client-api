@@ -34,9 +34,13 @@ abstract class IntegrationTestBase {
   @Autowired
   protected lateinit var hmppsQueueService: HmppsQueueService
 
-  internal val jdaResponseQueue by lazy { hmppsQueueService.findByQueueId("jdaresponsequeus") as HmppsQueue }
-  internal val awsSqsClient by lazy { jdaResponseQueue.sqsClient }
-  internal val queueUrl by lazy { jdaResponseQueue.queueUrl }
+  internal val jdaResponseQueues by lazy { hmppsQueueService.findByQueueId("jdaresponsequeues") as HmppsQueue }
+  internal val jdaResponseQueuesAwsSqsClient by lazy { jdaResponseQueues.sqsClient }
+  internal val jdaResponseQueueUrl by lazy { jdaResponseQueues.queueUrl }
+
+  internal val jdaRequestQueues by lazy { hmppsQueueService.findByQueueId("jdarequestqueues") as HmppsQueue }
+  internal val jdaRequestQueuesAwsSqsClient by lazy { jdaRequestQueues.sqsClient }
+  internal val jdaRequestQueueUrl by lazy { jdaRequestQueues.queueUrl }
 
   companion object {
     @JvmStatic
@@ -64,7 +68,9 @@ abstract class IntegrationTestBase {
 
   @BeforeEach
   fun `Wait for empty queue`() {
-    await untilCallTo { getNumberOfMessagesCurrentlyOnQueue(awsSqsClient, queueUrl) } matches { it == 0 }
+    await untilCallTo { getNumberOfMessagesCurrentlyOnQueue(jdaResponseQueuesAwsSqsClient, jdaResponseQueueUrl) } matches { it == 0 }
+
+    await untilCallTo { getNumberOfMessagesCurrentlyOnQueue(jdaRequestQueuesAwsSqsClient, jdaRequestQueueUrl) } matches { it == 0 }
   }
 
   @Autowired

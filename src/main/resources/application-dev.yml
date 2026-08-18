@@ -6,7 +6,7 @@ hmpps:
     enabled: true
     provider: localstack
     queues:
-      jdarequestqueus:
+      jdarequestqueues:
         queuename: ${HMPPS_JDA_REQUEST_QUEUE_NAME}
         dlqName: ${HMPPS_JDA_REQUEST_DLQ_NAME}
       jdaresponsequeus:
