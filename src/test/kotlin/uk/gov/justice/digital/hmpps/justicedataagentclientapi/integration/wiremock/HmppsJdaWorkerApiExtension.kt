@@ -47,7 +47,7 @@ class HmppsJdaWorkerMockServer : WireMockServer(WIREMOCK_PORT) {
           aResponse()
             .withHeaders(HttpHeaders(HttpHeader("Content-Type", "application/json")))
             .withBody(
-              DataGenerator.buildJdaResponse()
+              DataGenerator.buildJdaResponse(),
             ),
         ),
     )
@@ -60,7 +60,7 @@ class HmppsJdaWorkerMockServer : WireMockServer(WIREMOCK_PORT) {
           aResponse()
             .withHeaders(HttpHeaders(HttpHeader("Content-Type", "application/json")))
             .withBody(
-              DataGenerator.buildJdaResponse()
+              DataGenerator.buildJdaResponse(),
             ),
         ),
     )

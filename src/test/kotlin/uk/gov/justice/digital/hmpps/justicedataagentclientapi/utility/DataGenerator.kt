@@ -8,8 +8,7 @@ import java.util.UUID
 class DataGenerator {
 
   companion object {
-    fun buildJdaResponse() : String{
-      return """
+    fun buildJdaResponse(): String = """
         {
             "requestId": "01a00033-008e-7732-add3-873fa0ca5ef6",
             "correlationId": "019fcc4c-fff1-71ce-b853-b52f0b52cc72",
@@ -39,7 +38,7 @@ class DataGenerator {
                             "justifies": "risks_and_triggers"
                         },
                         {
-                            "text": "Marcus expressed a desire to transfer to a facility closer to his hometown so that his partner and children could visit more regularly",
+                            "text": "Test prisoner expressed a desire to transfer to a facility closer to his hometown so that his partner and children could visit more regularly",
                             "justifies": "protective_factors"
                         },
                         {
@@ -66,15 +65,13 @@ class DataGenerator {
                 "completedAt": "2026-08-14T12:16:04Z"
             }
         }
-      """.trimIndent()
-    }
+    """.trimIndent()
 
-    fun buildJdaRequest(correlationId: UUID, promptKey: String, version: Int): JdaRequest {
-      return JdaRequest(
-        correlationId,
-        Prompt(promptKey, version),
-        ObjectMapper().readTree(
-          """
+    fun buildJdaRequest(correlationId: UUID, promptKey: String, version: Int): JdaRequest = JdaRequest(
+      correlationId,
+      Prompt(promptKey, version),
+      ObjectMapper().readTree(
+        """
           [
             {
               "item_id": "76304207-b018-4812-a3bf-f294a05347e8",
@@ -97,9 +94,8 @@ class DataGenerator {
               "case_note_text": "On 22/05/2025 at approximately 11:30, Mr. Other approached me near the servery on B wing and requested to speak about a personal property matter. He stated that several items of clothing had gone missing following a cell search carried out the previous week. I explained that I was not present during that search but that I would look into the matter and follow up with him. Mr. Other became increasingly agitated and began raising his voice, accusing staff of stealing from him. He used threatening and offensive language toward me directly. I activated my body-worn camera and asked him calmly to return to his cell while the matter was investigated. Mr. Other became physically confrontational. A colleague responded to my request for assistance and together we guided Mr. Other back to his cell using appropriate restraint techniques. He was secured in his cell without further incident. Mr. Other will be placed on report for threatening behaviour and failure to comply with a lawful instruction."
             }
           ]
-        """.trimIndent()
-        )
-      )
-    }
+        """.trimIndent(),
+      ),
+    )
   }
 }

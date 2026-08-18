@@ -45,7 +45,6 @@ class JdaWorkerResourceTest(
 
   @AfterEach
   internal fun tearDown() {
-
   }
 
   @Test
@@ -121,7 +120,7 @@ class JdaWorkerResourceTest(
       .responseBody as JdaResponse
 
     // assert no message in queue
-    //assert message in jda response queue
+    // assert message in jda response queue
     sqsClient = hmppsQueueService
       .findByQueueId("jdaresponsequeus")!!.sqsClient
     queueUrl = sqsClient.getQueueUrl(
@@ -138,5 +137,4 @@ class JdaWorkerResourceTest(
     )?.join()
     assertEquals(0, messages?.messages()?.size)
   }
-
 }

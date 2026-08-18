@@ -1,6 +1,5 @@
 package uk.gov.justice.digital.hmpps.justicedataagentclientapi.service.integration
 
-import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -25,6 +24,7 @@ class JdaWorkerServiceImpl(
 ) : JdaWorkerService {
   @Autowired
   private lateinit var jdaMessagePublisher: JdaMessagePublisher
+
   @Autowired
   private lateinit var hmppsQueueService: HmppsQueueService
   companion object {
@@ -70,6 +70,5 @@ class JdaWorkerServiceImpl(
       logger.error("Error during dequeue response, queue is already empty", e)
       throw NotFoundException("Queue is empty, no message in queue to dequeue")
     }
-
   }
 }
