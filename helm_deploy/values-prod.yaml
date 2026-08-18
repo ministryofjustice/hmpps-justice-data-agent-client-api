@@ -9,6 +9,14 @@ generic-service:
     SPRING_PROFILES_ACTIVE: "prod"
     HMPPS_AUTH_URL: "https://sign-in.hmpps.service.justice.gov.uk/auth"
 
+  namespace_secrets:
+    sqs-jda-request-queue-secret:
+      HMPPS_JDA_REQUEST_QUEUE_NAME: "sqs_queue_name"
+      HMPPS_JDA_REQUEST_DLQ_NAME: "sqs_dlq_name"
+    sqs-jda-response-queue-secret:
+      HMPPS_JDA_RESPONSE_QUEUE_NAME: "sqs_queue_name"
+      HMPPS_JDA_RESPONSE_DLQ_NAME: "sqs_dlq_name"
+
 # CloudPlatform AlertManager receiver to route prometheus alerts to slack
 # See https://user-guide.cloud-platform.service.justice.gov.uk/documentation/monitoring-an-app/how-to-create-alarms.html#creating-your-own-custom-alerts
 generic-prometheus-alerts:

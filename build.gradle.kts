@@ -8,6 +8,12 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-webflux")
   implementation("org.springframework.boot:spring-boot-starter-webclient")
   implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.3")
+  implementation("uk.gov.justice.service.hmpps:hmpps-sqs-spring-boot-starter:7.3.0")
+
+  // Localstack
+  implementation("org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE")
+  testImplementation("org.testcontainers:localstack:1.21.4")
+  testImplementation("org.awaitility:awaitility-kotlin:4.3.0")
 
   testImplementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter-test:2.5.0")
   testImplementation("org.springframework.boot:spring-boot-starter-webflux-test")

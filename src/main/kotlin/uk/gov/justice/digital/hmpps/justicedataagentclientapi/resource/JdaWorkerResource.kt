@@ -47,4 +47,56 @@ class JdaWorkerResource(private val jdaWorkerService: JdaWorkerService) {
     val response = jdaWorkerService.submitSynchronousRequest(jdaRequest)
     return ResponseEntity(response, HttpStatus.OK)
   }
+
+  @Tag(name = "Jda requests")
+  @Operation(
+    summary = "Asynchronous request to jda worker.",
+    description = "This api endpoint is for sending asynchronous request  to jda worker.  Requires role ROLE_JUSTICE_DATA_AGENT_REQUESTS",
+    security = [SecurityRequirement(name = "JUSTICE_DATA_AGENT_REQUESTS")],
+    responses = [
+      ApiResponse(responseCode = "200", description = "Successful response from LLM"),
+      ApiResponse(
+        responseCode = "401",
+        description = "Unauthorized to access this endpoint",
+        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
+      ),
+      ApiResponse(
+        responseCode = "403",
+        description = "Forbidden to access this endpoint. The issue can be logged staff and prisoner have different establishment.",
+        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
+      ),
+    ],
+  )
+  @PostMapping("queuerequest")
+  @PreAuthorize("hasAnyRole('JUSTICE_DATA_AGENT_REQUESTS')")
+  suspend fun submitAsynchronousRequest(@RequestBody jdaRequest: JdaRequest): ResponseEntity<Void> {
+    jdaWorkerService.submitAsynchronousRequest(jdaRequest)
+    return ResponseEntity.status(HttpStatus.ACCEPTED).build()
+  }
+
+  @Tag(name = "Jda requests")
+  @Operation(
+    summary = "Asynchronous request to jda worker.",
+    description = "This api endpoint is for sending asynchronous request  to jda worker.  Requires role ROLE_JUSTICE_DATA_AGENT_REQUESTS",
+    security = [SecurityRequirement(name = "JUSTICE_DATA_AGENT_REQUESTS")],
+    responses = [
+      ApiResponse(responseCode = "200", description = "Successful response from LLM"),
+      ApiResponse(
+        responseCode = "401",
+        description = "Unauthorized to access this endpoint",
+        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
+      ),
+      ApiResponse(
+        responseCode = "403",
+        description = "Forbidden to access this endpoint. The issue can be logged staff and prisoner have different establishment.",
+        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
+      ),
+    ],
+  )
+  @PostMapping("dequeueresponse")
+  @PreAuthorize("hasAnyRole('JUSTICE_DATA_AGENT_REQUESTS')")
+  suspend fun dequeueResponse(): ResponseEntity<Void> {
+    // jdaWorkerService.submitNonBlockingRequest(jdaRequest)
+    return ResponseEntity.status(HttpStatus.ACCEPTED).build()
+  }
 }

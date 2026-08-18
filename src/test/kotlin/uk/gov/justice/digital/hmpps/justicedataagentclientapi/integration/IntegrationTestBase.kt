@@ -7,7 +7,10 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDO
 import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
 import org.springframework.http.HttpHeaders
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.DynamicPropertyRegistry
+import org.springframework.test.context.DynamicPropertySource
 import org.springframework.test.web.reactive.server.WebTestClient
+import uk.gov.justice.digital.hmpps.justicedataagentclientapi.integration.LocalStackContainer.setLocalStackProperties
 import uk.gov.justice.digital.hmpps.justicedataagentclientapi.integration.wiremock.HmppsAuthApiExtension
 import uk.gov.justice.digital.hmpps.justicedataagentclientapi.integration.wiremock.HmppsAuthApiExtension.Companion.hmppsAuth
 import uk.gov.justice.hmpps.test.kotlin.auth.JwtAuthorisationHelper
@@ -17,6 +20,17 @@ import uk.gov.justice.hmpps.test.kotlin.auth.JwtAuthorisationHelper
 @ActiveProfiles("test")
 @AutoConfigureWebTestClient
 abstract class IntegrationTestBase {
+
+  companion object {
+    @JvmStatic
+    private val localStackContainer = LocalStackContainer.instance
+
+    @JvmStatic
+    @DynamicPropertySource
+    fun localstackProperties(registry: DynamicPropertyRegistry) {
+      localStackContainer?.also { setLocalStackProperties(it, registry) }
+    }
+  }
 
   @Autowired
   protected lateinit var webTestClient: WebTestClient
