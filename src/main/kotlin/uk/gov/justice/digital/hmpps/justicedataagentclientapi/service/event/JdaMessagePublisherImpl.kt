@@ -10,8 +10,8 @@ import uk.gov.justice.hmpps.sqs.HmppsQueueService
 
 @Component
 class JdaMessagePublisherImpl(
-  @param:Value("\${hmpps.sqs.queues.jdarequestqueues.queuename}") private val jdaRequestQueueName: String,
-  @param:Value("\${hmpps.sqs.queues.jdarequestqueues.dlqName}") private val jdaRequestDlqName: String,
+  @param:Value("\${hmpps.sqs.queues.jdarequestqueues.queuename}") private val requestQueueName: String,
+  @param:Value("\${hmpps.sqs.queues.jdarequestqueues.dlqName}") private val requestDlqName: String,
 ) : JdaMessagePublisher {
 
   @Autowired
@@ -29,13 +29,13 @@ class JdaMessagePublisherImpl(
           awsSqsClient,
         )
     try {
-      logger.info("Sending jda request message to queue: $jdaRequestQueueName with correlation id: ${jdaRequest.correlationId}")
-      sqsTemplate.send { to -> to.queue(jdaRequestQueueName).payload(jdaRequest) }
-      logger.info("Jda request message sent to queue: $jdaRequestQueueName with correlation id: ${jdaRequest.correlationId}")
+      logger.info("Sending jda request message to queue: $requestQueueName with correlation id: ${jdaRequest.correlationId}")
+      sqsTemplate.send { to -> to.queue(requestQueueName).payload(jdaRequest) }
+      logger.info("Jda request message sent to queue: $requestQueueName with correlation id: ${jdaRequest.correlationId}")
     } catch (e: Exception) {
-      logger.error("Exception occurred when sending message to queue: $jdaRequestQueueName with correlation id: ${jdaRequest.correlationId},  exception: ${e.message}")
-      logger.warn("Sending jda request message with correlation id: ${jdaRequest.correlationId} to dlq name: $jdaRequestDlqName")
-      sqsTemplate.send { to -> to.queue(jdaRequestDlqName).payload(jdaRequest) }
+      logger.error("Exception occurred when sending message to queue: $requestQueueName with correlation id: ${jdaRequest.correlationId},  exception: ${e.message}")
+      sqsTemplate.send { to -> to.queue(requestDlqName).payload(jdaRequest) }
+      logger.info("Jda request message with correlation id: ${jdaRequest.correlationId} sent to dlq name: $requestDlqName")
     }
   }
 }
