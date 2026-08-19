@@ -4,7 +4,6 @@ hmpps-auth:
 hmpps:
   sqs:
     enabled: true
-    provider: localstack
     queues:
       jdarequestqueues:
         queuename: ${HMPPS_JDA_REQUEST_QUEUE_NAME}
