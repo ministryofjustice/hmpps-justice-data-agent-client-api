@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
-import software.amazon.awssdk.services.sqs.model.GetQueueUrlRequest
 import software.amazon.awssdk.services.sqs.model.ReceiveMessageRequest
 import tools.jackson.databind.ObjectMapper
 import uk.gov.justice.digital.hmpps.justicedataagentclientapi.integration.IntegrationTestBase
@@ -69,17 +68,10 @@ class JdaWorkerResourceTest(
   @Test
   fun `submit queue request and  get dequeue response`() {
     // Get message from jda request queue.
-    var sqsClient = hmppsQueueService
-      .findByQueueId("jdarequestqueues")!!.sqsClient
-    var queueUrl = sqsClient.getQueueUrl(
-      GetQueueUrlRequest.builder()
-        .queueName(jdaRequestQueueName)
-        .build(),
-    )?.join()?.queueUrl()
-    var messages = sqsClient.receiveMessage(
+    var messages = requestQueueAwsSqsClient.receiveMessage(
       ReceiveMessageRequest.builder()
         .maxNumberOfMessages(1)
-        .queueUrl(queueUrl)
+        .queueUrl(requestQueueUrl)
         .build(),
     )?.join()
     // Verify jd request queue is empty.
@@ -102,10 +94,10 @@ class JdaWorkerResourceTest(
       .expectStatus().isAccepted
 
     // Get message from queue to verify it get added in jda request queue by call to endpoint /v1/queuerequest.
-    messages = sqsClient.receiveMessage(
+    messages = requestQueueAwsSqsClient.receiveMessage(
       ReceiveMessageRequest.builder()
         .maxNumberOfMessages(1)
-        .queueUrl(queueUrl)
+        .queueUrl(requestQueueUrl)
         .build(),
     )?.join()
     assertEquals(1, messages?.messages()?.size)
@@ -133,17 +125,10 @@ class JdaWorkerResourceTest(
       .responseBody as JdaResponse
 
     // Verify no message in jda response queue after call to endpoint /v1/dequeueresponse.
-    sqsClient = hmppsQueueService
-      .findByQueueId("jdaresponsequeues")!!.sqsClient
-    queueUrl = sqsClient.getQueueUrl(
-      GetQueueUrlRequest.builder()
-        .queueName(jdaResponseQueueName)
-        .build(),
-    )?.join()?.queueUrl()
-    messages = sqsClient.receiveMessage(
+    messages = requestQueueAwsSqsClient.receiveMessage(
       ReceiveMessageRequest.builder()
         .maxNumberOfMessages(1)
-        .queueUrl(queueUrl)
+        .queueUrl(responseQueueUrl)
         .build(),
     )?.join()
     assertEquals(0, messages?.messages()?.size)

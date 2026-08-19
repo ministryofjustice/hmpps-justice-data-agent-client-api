@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import software.amazon.awssdk.services.sqs.model.DeleteMessageRequest
-import software.amazon.awssdk.services.sqs.model.GetQueueUrlRequest
 import software.amazon.awssdk.services.sqs.model.ReceiveMessageRequest
 import tools.jackson.databind.ObjectMapper
 import uk.gov.justice.digital.hmpps.justicedataagentclientapi.exception.SqsQueueException
@@ -41,14 +40,11 @@ class JdaWorkerServiceImpl(
   override suspend fun dequeueResponse(): JdaResponse {
     try {
       logger.info("Dequeue jda response queue: $jdaRequestQueueName")
-      val sqsClient = hmppsQueueService
-        .findByQueueId("jdaresponsequeues")!!.sqsClient
-      val queueUrl = sqsClient.getQueueUrl(
-        GetQueueUrlRequest.builder()
-          .queueName(jdaResponseQueueName)
-          .build(),
-      )?.join()?.queueUrl()
-      val messages = sqsClient.receiveMessage(
+      val responseQueue = hmppsQueueService
+        .findByQueueId("jdaresponsequeues")
+      val sqsClient = responseQueue?.sqsClient
+      val queueUrl = responseQueue?.queueUrl
+      val messages = sqsClient?.receiveMessage(
         ReceiveMessageRequest.builder()
           .maxNumberOfMessages(1)
           .queueUrl(queueUrl)
