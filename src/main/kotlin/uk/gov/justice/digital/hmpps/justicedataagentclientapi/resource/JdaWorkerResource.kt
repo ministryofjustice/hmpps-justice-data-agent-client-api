@@ -37,7 +37,7 @@ class JdaWorkerResource(private val jdaWorkerService: JdaWorkerService) {
       ),
       ApiResponse(
         responseCode = "403",
-        description = "Forbidden to access this endpoint. The issue can be logged staff and prisoner have different establishment.",
+        description = "Forbidden user do not required role.",
         content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
       ),
     ],
@@ -63,7 +63,7 @@ class JdaWorkerResource(private val jdaWorkerService: JdaWorkerService) {
       ),
       ApiResponse(
         responseCode = "403",
-        description = "Forbidden to access this endpoint. The issue can be logged staff and prisoner have different establishment.",
+        description = "Forbidden user do not required role.",
         content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
       ),
     ],
@@ -89,7 +89,7 @@ class JdaWorkerResource(private val jdaWorkerService: JdaWorkerService) {
       ),
       ApiResponse(
         responseCode = "403",
-        description = "Forbidden to access this endpoint. The issue can be logged staff and prisoner have different establishment.",
+        description = "Forbidden user do not required role.",
         content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
       ),
     ],
