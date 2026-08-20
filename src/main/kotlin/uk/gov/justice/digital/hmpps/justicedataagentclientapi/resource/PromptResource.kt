@@ -47,7 +47,7 @@ class PromptResource(
       ),
       ApiResponse(
         responseCode = "403",
-        description = "Forbidden user do not required role.",
+        description = "Forbidden user do not have required role.",
         content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
       ),
     ],
@@ -74,7 +74,7 @@ class PromptResource(
       ),
       ApiResponse(
         responseCode = "403",
-        description = "Forbidden user do not required role.",
+        description = "Forbidden user do not have required role.",
         content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
       ),
     ],
@@ -104,7 +104,7 @@ class PromptResource(
       ),
       ApiResponse(
         responseCode = "403",
-        description = "Forbidden user do not required role.",
+        description = "Forbidden user do not have required role.",
         content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
       ),
     ],
@@ -131,7 +131,7 @@ class PromptResource(
       ),
       ApiResponse(
         responseCode = "403",
-        description = "Forbidden user do not required role.",
+        description = "Forbidden user do not have required role.",
         content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
       ),
     ],
@@ -158,7 +158,7 @@ class PromptResource(
       ),
       ApiResponse(
         responseCode = "403",
-        description = "Forbidden user do not required role.",
+        description = "Forbidden user do not have required role.",
         content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
       ),
     ],
@@ -185,7 +185,7 @@ class PromptResource(
       ),
       ApiResponse(
         responseCode = "403",
-        description = "Forbidden user do not required role.",
+        description = "Forbidden user do not have required role.",
         content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
       ),
     ],
