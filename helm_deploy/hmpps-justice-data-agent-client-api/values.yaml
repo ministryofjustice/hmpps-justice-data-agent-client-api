@@ -9,6 +9,9 @@ generic-service:
     tag: app_version # override at deployment time
     port: 8081
 
+  # Use IRSA service account for AWS access (SQS, SNS)
+  serviceAccountName: "hmpps-justice-data-agent-client-api"
+
   ingress:
     enabled: true
     host: app-hostname.local # override per environment

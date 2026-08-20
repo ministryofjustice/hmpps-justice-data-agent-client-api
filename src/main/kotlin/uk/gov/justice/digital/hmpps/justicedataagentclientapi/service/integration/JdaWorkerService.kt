@@ -7,5 +7,7 @@ interface JdaWorkerService {
 
   suspend fun submitSynchronousRequest(jdaRequest: JdaRequest): JdaResponse
 
-  suspend fun submitNonBlockingRequest(jdaRequest: JdaRequest): JdaResponse
+  suspend fun submitAsynchronousRequest(jdaRequest: JdaRequest)
+
+  suspend fun dequeueResponse(): JdaResponse
 }

@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.servlet.resource.NoResourceFoundException
 import uk.gov.justice.digital.hmpps.justicedataagentclientapi.exception.JdaWorkerException
+import uk.gov.justice.digital.hmpps.justicedataagentclientapi.exception.SqsQueueException
+import uk.gov.justice.digital.hmpps.justicedataagentworker.exception.NotFoundException
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
 @RestControllerAdvice
@@ -29,6 +31,17 @@ class JusticeDataAgentClientApiExceptionHandler {
 
   @ExceptionHandler(NoResourceFoundException::class)
   fun handleNoResourceFoundException(e: NoResourceFoundException): ResponseEntity<ErrorResponse> = ResponseEntity
+    .status(NOT_FOUND)
+    .body(
+      ErrorResponse(
+        status = NOT_FOUND,
+        userMessage = "No resource found failure: ${e.message}",
+        developerMessage = e.message,
+      ),
+    ).also { log.info("No resource found exception: {}", e.message) }
+
+  @ExceptionHandler(NotFoundException::class)
+  fun handleNoResourceFoundException(e: NotFoundException): ResponseEntity<ErrorResponse> = ResponseEntity
     .status(NOT_FOUND)
     .body(
       ErrorResponse(
@@ -58,6 +71,17 @@ class JusticeDataAgentClientApiExceptionHandler {
 
   @ExceptionHandler(Exception::class)
   fun handleException(e: Exception): ResponseEntity<ErrorResponse> = ResponseEntity
+    .status(INTERNAL_SERVER_ERROR)
+    .body(
+      ErrorResponse(
+        status = INTERNAL_SERVER_ERROR,
+        userMessage = "Unexpected error: ${e.message}",
+        developerMessage = e.message,
+      ),
+    ).also { log.error("Unexpected exception", e) }
+
+  @ExceptionHandler(SqsQueueException::class)
+  fun handleException(e: SqsQueueException): ResponseEntity<ErrorResponse> = ResponseEntity
     .status(INTERNAL_SERVER_ERROR)
     .body(
       ErrorResponse(

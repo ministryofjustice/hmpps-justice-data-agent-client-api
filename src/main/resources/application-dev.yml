@@ -2,6 +2,15 @@ hmpps-auth:
   url: "http://localhost:8090/auth"
 
 hmpps:
+  sqs:
+    enabled: true
+    queues:
+      jdarequestqueues:
+        queuename: ${HMPPS_JDA_REQUEST_QUEUE_NAME}
+        dlqName: ${HMPPS_JDA_REQUEST_DLQ_NAME}
+      jdaresponsequeus:
+        queuename: ${HMPPS_JDA_RESPONSE_QUEUE_NAME}
+        dlqName: ${HMPPS_JDA_RESPONSE_DLQ_NAME}
   jda:
     worker:
       api:
